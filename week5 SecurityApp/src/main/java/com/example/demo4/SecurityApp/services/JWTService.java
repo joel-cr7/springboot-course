@@ -8,7 +8,9 @@ public interface JWTService {
     // 2) Verify token and return user id
 
     // takes our current user as input to generate token
-    String generateToken(User user);
+    String generateAccessToken(User user);
+
+    String generateRefreshToken(User user);
 
     Long getUserIdFromToken(String token);
 }

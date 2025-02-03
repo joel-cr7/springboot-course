@@ -25,7 +25,7 @@ public class JWTServiceImpl implements JWTService {
     }
 
     @Override
-    public String generateToken(User user) {
+    public String generateAccessToken(User user) {
         // headers are added by the library itself
         return Jwts.builder()
                 .subject(user.getId().toString())      // identify the user
@@ -33,6 +33,17 @@ public class JWTServiceImpl implements JWTService {
                 .claim("role", Set.of("USER", "ADMIN"))
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000*60))
+                .signWith(getSecretkey())       // generate a SecretKey to sign with
+                .compact();
+    }
+
+    @Override
+    public String generateRefreshToken(User user) {
+        // headers are added by the library itself
+        return Jwts.builder()
+                .subject(user.getId().toString())      // identify the user
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000L *60*10*60*24*30*6))     // refresh token will be valid for next 6 months
                 .signWith(getSecretkey())       // generate a SecretKey to sign with
                 .compact();
     }
